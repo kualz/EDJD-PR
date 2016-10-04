@@ -1,0 +1,8 @@
+C:\Users\Gil\Desktop\ClientServer\Server\bin\Debug\Server.exe.config
+C:\Users\Gil\Desktop\ClientServer\Server\bin\Debug\Server.exe
+C:\Users\Gil\Desktop\ClientServer\Server\bin\Debug\Server.pdb
+C:\Users\Gil\Desktop\ClientServer\Server\bin\Debug\Common.dll
+C:\Users\Gil\Desktop\ClientServer\Server\bin\Debug\Common.pdb
+C:\Users\Gil\Desktop\ClientServer\Server\obj\Debug\Server.exe
+C:\Users\Gil\Desktop\ClientServer\Server\obj\Debug\Server.pdb
+C:\Users\Gil\Desktop\ClientServer\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
