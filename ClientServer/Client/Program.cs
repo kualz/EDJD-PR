@@ -39,6 +39,9 @@ namespace Client
             string read;
             do
             {
+                
+
+
                 read = Console.ReadLine();
                 client.Send(read);
             } while (read != "quit");
