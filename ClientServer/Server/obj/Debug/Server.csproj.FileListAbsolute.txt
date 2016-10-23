@@ -6,3 +6,11 @@ C:\Users\Gil\Desktop\ClientServer\Server\bin\Debug\Common.pdb
 C:\Users\Gil\Desktop\ClientServer\Server\obj\Debug\Server.exe
 C:\Users\Gil\Desktop\ClientServer\Server\obj\Debug\Server.pdb
 C:\Users\Gil\Desktop\ClientServer\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Server\bin\Debug\Server.exe.config
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Server\bin\Debug\Server.exe
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Server\bin\Debug\Server.pdb
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Server\bin\Debug\Common.dll
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Server\bin\Debug\Common.pdb
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Server\obj\Debug\Server.exe
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Server\obj\Debug\Server.pdb

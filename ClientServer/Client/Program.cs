@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace Client
@@ -8,6 +10,7 @@ namespace Client
     {
         static void Main(string[] args)
         {
+            bool myTurn = false;
             Client client = new Client();
             try
             {
@@ -19,15 +22,19 @@ namespace Client
 
                 Console.WriteLine(ex);
             }
-           
-            
+
+            bool live = false;
             Task.Factory.StartNew(async () => {
                 while (true)
                 {
                     try
                     {
                         var received = await client.Receive();
-                        Console.WriteLine("Server Message: " + received.Data);
+                        Console.WriteLine(received.Data);
+                        if (received.Data == "Live") live = true;
+                        if (received.Data == "It is your turn to play.") myTurn = true;
+
+
                     }
                     catch (Exception ex)
                     {
@@ -36,15 +43,19 @@ namespace Client
                 }
             });
 
-            string read;
+
             do
             {
                 
-
-
-                read = Console.ReadLine();
-                client.Send(read);
-            } while (read != "quit");
+                if (live && myTurn)
+                {
+                    string read = Console.ReadLine();
+                    client.Send(read);
+                    myTurn = false;
+                }
+                if (!myTurn && live && Console.ReadLine()!= "!") Console.WriteLine("Wait for your turn");
+                   
+            } while (true);
 
             client.Disconnect();
         }

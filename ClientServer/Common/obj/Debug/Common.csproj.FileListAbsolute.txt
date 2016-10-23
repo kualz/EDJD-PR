@@ -3,3 +3,8 @@ C:\Users\Gil\Desktop\ClientServer\Common\bin\Debug\Common.pdb
 C:\Users\Gil\Desktop\ClientServer\Common\obj\Debug\Common.csprojResolveAssemblyReference.cache
 C:\Users\Gil\Desktop\ClientServer\Common\obj\Debug\Common.dll
 C:\Users\Gil\Desktop\ClientServer\Common\obj\Debug\Common.pdb
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Common\bin\Debug\Common.dll
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Common\bin\Debug\Common.pdb
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Common\obj\Debug\Common.csprojResolveAssemblyReference.cache
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Common\obj\Debug\Common.dll
+F:\IPCA\disciplinas\3o ano\Redes\EDJD-PR\ClientServer\Common\obj\Debug\Common.pdb
