@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -12,6 +14,7 @@ namespace Client
         {
             bool myTurn = false;
             Client client = new Client();
+            string[] GameBoard = new string[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
             try
             {
                 client = Client.Connect("127.0.0.1", 32123);
@@ -24,7 +27,8 @@ namespace Client
             }
 
             bool live = false;
-            Task.Factory.StartNew(async () => {
+            Task.Factory.StartNew(async () =>
+            {
                 while (true)
                 {
                     try
@@ -33,6 +37,28 @@ namespace Client
                         Console.WriteLine(received.Data);
                         if (received.Data == "Live") live = true;
                         if (received.Data == "It is your turn to play.") myTurn = true;
+                        if (received.Data == "Invalid move. Try again.") myTurn = true;
+                        else
+                        {
+                            try
+                            {
+                                string[] move = received.Data.Split('|');
+                                GameBoard[Int32.Parse(move[0]) - 1] = move[1];
+                                Console.Clear();
+                            }
+                            catch (Exception){}
+                        }
+                        if (live && received.Data != "It is your turn to play.")
+                        {
+                            for (int x = 0; x < 9; x++)
+                            {
+                                Console.Write(GameBoard[x] + "|");
+
+                                if (x == 2 || x == 5)
+                                    Console.Write("\n");
+                            }
+                        }
+                       
 
 
                     }
@@ -43,18 +69,22 @@ namespace Client
                 }
             });
 
-
+         
             do
             {
-                
-                if (live && myTurn)
+                if (live)
                 {
-                    string read = Console.ReadLine();
-                    client.Send(read);
-                    myTurn = false;
+                    if (myTurn)
+                    {
+                        string read = Console.ReadLine();
+                        client.Send(read);
+                        myTurn = false;
+                        Console.Clear();
+                        
+                    }
+                    
                 }
-                if (!myTurn && live && Console.ReadLine()!= "!") Console.WriteLine("Wait for your turn");
-                   
+
             } while (true);
 
             client.Disconnect();
