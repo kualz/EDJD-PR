@@ -34,19 +34,30 @@ namespace Client
                     try
                     {
                         var received = await client.Receive();
-                        Console.WriteLine(received.Data);
+                        //Console.WriteLine(received.Data);
                         if (received.Data == "Live") live = true;
                         if (received.Data == "It is your turn to play.") myTurn = true;
+                        if (received.Data == "Game Restarting...")
+                        {
+                            GameBoard = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+                        }
+                        if (received.Data == "Remake")
+                        {
+                            Console.Clear();
+                            GameBoard = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+                        }
                         if (received.Data == "Invalid move. Try again.") myTurn = true;
                         else
                         {
                             try
                             {
                                 string[] move = received.Data.Split('|');
-                                GameBoard[Int32.Parse(move[0]) - 1] = move[1];
+                                GameBoard[int.Parse(move[0]) - 1] = move[1];
                                 Console.Clear();
                             }
-                            catch (Exception){}
+                            catch (Exception)
+                            {
+                            }
                         }
                         if (live && received.Data != "It is your turn to play.")
                         {
@@ -57,8 +68,12 @@ namespace Client
                                 if (x == 2 || x == 5)
                                     Console.Write("\n");
                             }
+                            Console.Write("\nLast Play:");
                         }
-                       
+                       Console.WriteLine(received.Data);
+
+
+
 
 
                     }
@@ -76,10 +91,20 @@ namespace Client
                 {
                     if (myTurn)
                     {
+                        
                         string read = Console.ReadLine();
-                        client.Send(read);
-                        myTurn = false;
-                        Console.Clear();
+                        if ((read == "1" || read == "2" || read == "3" || read == "4" ||
+                            read == "5" || read == "6" || read == "7" || read == "8" ||
+                            read == "9")&& GameBoard[int.Parse(read) - 1] != "0" && GameBoard[int.Parse(read) - 1] != "x")
+                        {
+                            client.Send(read);
+                            myTurn = false;
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid move");
+                        }
                         
                     }
                     

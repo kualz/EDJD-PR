@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Server
 {
     class Program
     {
+        static bool sendRemake = false;
         static void Main(string[] args)
         {
             string[] GameBoard = new string[]  { "1","2","3", "4", "5", "6" , "7", "8", "9" } ;
@@ -15,6 +17,11 @@ namespace Server
             int pieceAux = 0, playerAux = 0;
             List<IPEndPoint> Players = new List<IPEndPoint>();
             bool Live = false;
+            bool remake = false;
+            Timer remakeTimer = new Timer();
+            remakeTimer.Interval = 5000;
+            remakeTimer.Elapsed += new ElapsedEventHandler(onTimedEvent);
+            
 
             var server = new Server(new IPEndPoint(IPAddress.Any, 32123));
             
@@ -29,7 +36,8 @@ namespace Server
 
                             if (x == 2 || x == 5)
                              Console.Write("\n");
-                        }             
+                        }
+                                     
                                         
 
                     var received = await server.Receive();
@@ -46,7 +54,7 @@ namespace Server
                     if (Live == false && Players.Count == 2)
                     {
                         Live = true;
-                        foreach (IPEndPoint ipEnd in Players)
+                        foreach (var ipEnd in Players)
                         {
                             server.Reply(new StringMessage("Live",ipEnd));           
                                                        
@@ -61,8 +69,8 @@ namespace Server
                         {
                             if (received.Sender.Equals(Players[0]))
                             {
-                                GameBoard[Int32.Parse(received.Data) - 1] = "x";
-                                foreach (IPEndPoint ip in Players)
+                                GameBoard[int.Parse(received.Data) - 1] = "x";
+                                foreach (var ip in Players)
                                 {
                                     server.Reply(new StringMessage(received.Data + "|x", ip));
                                 }
@@ -70,8 +78,8 @@ namespace Server
                             if (received.Sender.Equals(Players[1]))
                             {
 
-                                GameBoard[Int32.Parse(received.Data) - 1] = "0";
-                                foreach (IPEndPoint ip in Players)
+                                GameBoard[int.Parse(received.Data) - 1] = "0";
+                                foreach (var ip in Players)
                                 {
                                     server.Reply(new StringMessage(received.Data + "|0", ip));
                                 }
@@ -88,10 +96,11 @@ namespace Server
                                 (GameBoard[0] == GameBoard[4] && GameBoard[0] == GameBoard[8]) ||
                                 (GameBoard[2] == GameBoard[4] && GameBoard[2] == GameBoard[6]))
                             {
-                                foreach (IPEndPoint ip in Players)
+                                foreach (var ip in Players)
                                 {
                                     server.Reply(new StringMessage("Player " + (playerAux+1) + " - "+ GamePieces[playerAux] + " wins", ip));
                                 }
+                                remake = true;
 
                             }
 
@@ -101,12 +110,21 @@ namespace Server
 
                             //Check for Draw
 
-
+                            //remake
+                            if (remake)
+                            {
+                                GameBoard = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+                                foreach (var ip in Players)
+                                {
+                                    server.Reply(new StringMessage("Game Restarting...", ip));
+                                }
+                                remakeTimer.Enabled = true;
+                            }
 
                         }
                         else
                         {
-                            if (Players[playerAux] == received.Sender)
+                            if (Players[playerAux].Equals( received.Sender))
                                 server.Reply(new StringMessage("Invalid move. Try again.", received.Sender));
                         }
                     }
@@ -121,10 +139,26 @@ namespace Server
             string read;
             do
             {
-                read = Console.ReadLine();
-            } while (read != "quit");
+                if (sendRemake)
+                {
+                    sendRemake = false;
+                    remake = false;
+                    remakeTimer.Enabled = false;
+                    foreach (var ip in Players)
+                    {
+                        server.Reply(new StringMessage("Remake", ip));
+                    }
+                }
+            } while (true);
+
+
+
 
             server.Shutdown();
+        }
+        static void onTimedEvent(object source, ElapsedEventArgs e)
+        {
+            sendRemake = true;
         }
     }
 }
