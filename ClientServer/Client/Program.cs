@@ -37,6 +37,13 @@ namespace Client
                         //Console.WriteLine(received.Data);
                         if (received.Data == "Live") live = true;
                         if (received.Data == "It is your turn to play.") myTurn = true;
+                        if (received.Data == "disconnect")
+                        {
+                            client.Disconnect();
+                            Console.WriteLine("The other player left, Session closed.");
+                        }
+                        if (received.Data == "U there")
+                            client.Send("yep");                     
                         if (received.Data == "Game Restarting...")
                         {
                             GameBoard = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -59,7 +66,7 @@ namespace Client
                             {
                             }
                         }
-                        if (live && received.Data != "It is your turn to play.")
+                        if (live && received.Data != "It is your turn to play." && received.Data != "U there")
                         {
                             for (int x = 0; x < 9; x++)
                             {
@@ -70,7 +77,8 @@ namespace Client
                             }
                             Console.Write("\nLast Play:");
                         }
-                       Console.WriteLine(received.Data);
+                        if (received.Data != "U there")
+                                Console.WriteLine(received.Data);
 
 
 

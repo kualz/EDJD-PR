@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using System;
+using Common;
 using System.Net.Sockets;
 using System.Text;
 
@@ -16,8 +17,13 @@ namespace Client
 
         public void Send(string message)
         {
-            var data = Encoding.ASCII.GetBytes(message);
-            UdpClient.Send(data, data.Length);
+            try
+            {
+                var data = Encoding.ASCII.GetBytes(message);
+                UdpClient.Send(data, data.Length);
+            }
+            catch (Exception e) { Console.WriteLine(e.Message); }
+
         }
 
         public void Disconnect()
