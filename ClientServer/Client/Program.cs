@@ -34,13 +34,15 @@ namespace Client
                     try
                     {
                         var received = await client.Receive();
-                        //Console.WriteLine(received.Data);
+
                         if (received.Data == "Live") live = true;
                         if (received.Data == "It is your turn to play.") myTurn = true;
                         if (received.Data == "disconnect")
                         {
+                            live = false;
                             client.Disconnect();
                             Console.WriteLine("The other player left, Session closed.");
+                            break;
                         }
                         if (received.Data == "U there")
                             client.Send("yep");                     

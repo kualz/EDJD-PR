@@ -28,7 +28,7 @@ namespace Server
             Timer pingTimer = new Timer();
             pingTimer.Interval = 3000;
             pingTimer.Elapsed += new ElapsedEventHandler(pingEvent);
-
+            int playsCounter = 0;
 
             var server = new Server(new IPEndPoint(IPAddress.Any, 32123));
 
@@ -36,19 +36,17 @@ namespace Server
             {
                 while (true)
                 {
-                    //Console.Clear();
-
-                    //    for (int x = 0; x < 9; x++)
-                    //    {
-                    //        Console.Write(GameBoard[x] + "|");
-
-                    //        if (x == 2 || x == 5)
-                    //         Console.Write("\n");
-                    //    }
-
-
-
                     var received = await server.Receive();
+                    if (received.Data == "player_disconnected")
+                    {
+                        foreach (var ip in Players)
+                        {
+                            try { server.Reply(new StringMessage("disconnect", ip)); }
+                            catch (Exception e) { Console.WriteLine(e.Message); }
+
+                        }
+                        Players.Clear();
+                    }
                     if (Players.Count > 2)
                     {
                         try { server.Reply(new StringMessage("Server is full!", received.Sender)); }
@@ -87,20 +85,7 @@ namespace Server
                         Console.WriteLine("ping received from " + received.Sender.Address);
                         pings.Add(received.Sender);
                     }
-                    if (pings.Count == 2 && Players.Count == 2)
-                    {
-                        if (pings[0].Equals(pings[1]))
-                        {
-                            remake = true;
-                            Live = false;
-                            foreach (var ip in Players)
-                            {
-                                try { server.Reply(new StringMessage("disconnect", ip)); }
-                                catch (Exception e) { Console.WriteLine(e.Message); }
-                                
-                            }
-                        }
-                    }
+
                     if (Live)
                     {
                         if (received.Data == "1" || received.Data == "2" || received.Data == "3" || received.Data == "4" ||
@@ -114,7 +99,7 @@ namespace Server
                                 {
                                     try { server.Reply(new StringMessage(received.Data + "|x", ip)); }
                                     catch (Exception e) { Console.WriteLine(e.Message); }
-                                    
+
                                 }
                             }
                             if (received.Sender.Equals(Players[1]))
@@ -125,7 +110,6 @@ namespace Server
                                 {
                                     try { server.Reply(new StringMessage(received.Data + "|0", ip)); }
                                     catch (Exception e) { Console.WriteLine(e.Message); }
-
                                 }
                             }
                             //Check for Victory
@@ -140,16 +124,23 @@ namespace Server
                             {
                                 foreach (var ip in Players)
                                 {
-                                    try {
+                                    try
+                                    {
                                         server.Reply(
-                                      new StringMessage(
-                                          "Player " + (playerAux + 1) + " - " + GamePieces[playerAux] + " wins", ip));
+                                            new StringMessage(
+                                                "Player " + (playerAux + 1) + " - " + GamePieces[playerAux] + " wins",
+                                                ip));
                                     }
-                                    catch (Exception e) { Console.WriteLine(e.Message); }
-                                    
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine(e.Message);
+                                    }
+
                                 }
                                 remake = true;
                             }
+
+
 
                             playerAux++;
                             if (playerAux > 1) playerAux = 0;
@@ -157,6 +148,7 @@ namespace Server
                             catch (Exception e) { Console.WriteLine(e.Message); }
                             
                             //Check for Draw
+                            
 
                             //remake
                             if (remake)
@@ -174,7 +166,7 @@ namespace Server
                         }
                         else
                         {
-                            if (Players[playerAux].Equals(received.Sender))
+                            if (Players[playerAux].Equals(received.Sender) && received.Data != "yep")
                             {
                                 try { server.Reply(new StringMessage("Invalid move. Try again.", received.Sender)); }
                                 catch (Exception e) { Console.WriteLine(e.Message); }
